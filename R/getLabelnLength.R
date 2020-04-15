@@ -1,7 +1,7 @@
 ## The following two functions 
 ## are written by Liam J. Revell 2011-2013, 2014
 
-## you can find it at the link 
+## you can find them at the link 
 ## https://github.com/liamrevell/phytools.git
 
 
