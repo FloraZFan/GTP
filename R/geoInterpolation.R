@@ -1,7 +1,18 @@
-## geodesic interpolation 
-## given theta in (0,1)
-## list t1 and t2 
-
+## geodesic interpolation: given theta in (0,1)
+## find the interpolation tree on geodesic
+## @ parameter theta: parameter for interpolation 
+## @ paramter t1/t2: starting/ending tree list
+## @ paramter path.mat: matrix of path space that geodesic travels
+## @ paramter noncomm.dist.seq: matrix of distance that noncommon edges contribute in each othant
+## @ paramter geo.dist: geodesic distance from t1 to t2 
+## @ paramter noncomm.dist: noncommon edge contibution to geodesic distance
+## @ paramter comm.dist: common edge contribution to geodesic distance
+## @ paramter leaf.dist: leaf edge contribution to geodesic distance
+## @ return intpn.tree is a tree list which contains:
+## feature tip.label: leaf edge label 
+## feature tip.length: leaf edge length 
+## feature int.edges.length: interior edge length
+## feature int.edge.split: interior edge split
 
 find.intpn.tree <- function(theta,t1,t2,path.mat,
                             noncomm.dist.seq,geo.dist,
@@ -10,13 +21,15 @@ find.intpn.tree <- function(theta,t1,t2,path.mat,
   nEdge1 = length(t1$int.edges.length)
   nEdge2 = length(t2$int.edges.length)
   
+  # combine edge length
   edge.length = c(t1$int.edges.length, t2$int.edges.length)
   
+  # find common edge
   comm.edge.idx = find.common.edge(t1$int.edge.split,t2$int.edge.split)
   
   # distance list for noncomm/comm/leaf edge distance 
   acc.dist.seq = vector()
-  
+  # noncommon edge distance
   if(!is.null(noncomm.dist.seq)){
     num.noncomm = nrow(noncomm.dist.seq)
     for (i in 1:num.noncomm){
@@ -26,12 +39,12 @@ find.intpn.tree <- function(theta,t1,t2,path.mat,
   }else{
     num.noncomm = 0
   }
-  
+  # common edge distance
   acc.dist.seq[length(acc.dist.seq)+1] = norm2(c(noncomm.dist,comm.dist)) 
-  
+  # leaf edge distance
   acc.dist.seq[length(acc.dist.seq)+1] = norm2(c(noncomm.dist,comm.dist,leaf.dist))
   
-  # find the index in distance list
+  # find the index for theta in the distance list
   idx.theta = min(which(acc.dist.seq>=theta*geo.dist))
   
   # settings for the interpolation tree
@@ -41,6 +54,7 @@ find.intpn.tree <- function(theta,t1,t2,path.mat,
   intpn.tip.label = t1$tip.label
   intpn.tip.length = t1$tip.length
   
+  # get distance changes for the interpolation tree
   if(idx.theta==1){
     part.dist = theta*geo.dist
     full.dist = acc.dist.seq[idx.theta]
@@ -58,13 +72,14 @@ find.intpn.tree <- function(theta,t1,t2,path.mat,
     
     intpn.edge.length[which(intpn.edge.idx==1)] = edge.length[which(intpn.edge.idx==1)]
     
+    # index for the edges to be dropped from t1
     drop.edge.idx = setdiff(which(path.mat[idx.theta,(1:nEdge1)]==1),
                             which(path.mat[idx.theta+1,(1:nEdge1)]==1))
-    
+    # index for the edges to be added to t1
     add.edge.idx = setdiff(which(path.mat[idx.theta+1,-(1:nEdge1)]==1),
                            which(path.mat[idx.theta,-(1:nEdge1)]==1))+nEdge1
     
-    ## dropping procedure or adding procedure
+    ## dropping/adding procedure 
     if(part.dist<=noncomm.dist.seq[idx.theta,1]){
       # only dropping procedure 
       full.dist = noncomm.dist.seq[idx.theta,1]
@@ -73,6 +88,7 @@ find.intpn.tree <- function(theta,t1,t2,path.mat,
         intpn.edge.idx[drop.edge.idx] = rep(1,length(drop.edge.idx))
       }
       
+      # no adding procedure 
       if(length(add.edge.idx)>0){
         intpn.edge.idx[add.edge.idx] = rep(0,length(add.edge.idx))
         intpn.edge.length[add.edge.idx] = rep(0,length(add.edge.idx))
@@ -88,7 +104,7 @@ find.intpn.tree <- function(theta,t1,t2,path.mat,
       
       intpn.edge.length = intpn.edge.length[which(intpn.edge.length!=0)]
     }else{
-      # after dropping procedure 
+      # proceed adding procedure after dropping procedure 
       part.dist = part.dist-noncomm.dist.seq[idx.theta,1]
       full.dist = noncomm.dist.seq[idx.theta,2]
       # start adding procedure 
@@ -116,12 +132,10 @@ find.intpn.tree <- function(theta,t1,t2,path.mat,
     }else{
       # with all non common edge changes
       # part of common edge 
-      
       v1 = t1$int.edges.length[comm.edge.idx[,1]]
       v2 = t2$int.edges.length[comm.edge.idx[,2]]
       
       intpn.edge.length[comm.edge.idx[,2]] = (v2-v1)*part.dist/full.dist+v1
-      
       
     }
     
