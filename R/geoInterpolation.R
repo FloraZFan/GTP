@@ -15,10 +15,19 @@
 ## feature int.edge.split: interior edge split
 
 
-find.intpn.tree <- function(theta,t1,t2,path.mat,
-                            noncomm.dist.seq,geo.dist,
-                            noncomm.dist,comm.dist,leaf.dist){
-
+find.intpn.tree <- function(theta,t1,t2){
+  
+  # calculate geodesic 
+  path.dist.cal = get.path.geodist(t1,t2)
+  
+  path.mat = path.dist.cal$path.mat
+  noncomm.dist.seq = path.dist.cal$dist.seq
+  geo.dist = path.dist.cal$geo.dist
+  noncomm.dist = path.dist.cal$noncomm.edge.dist
+  comm.dist = path.dist.cal$comm.edge.dist 
+  leaf.dist = path.dist.cal$leaf.edge.dist
+ 
+  # find interpolation tree
   nEdge1 = length(t1$int.edges.length)
   nEdge2 = length(t2$int.edges.length)
   
