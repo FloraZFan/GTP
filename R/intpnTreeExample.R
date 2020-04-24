@@ -30,23 +30,15 @@ t2 = tree.data[[t2.idx]]
 ## theta in [0,1]
 theta = 0.8
 
-# calculate geodesic distance between t1 and t2
-
-path.dist.cal = get.path.geodist(t1,t2)
-
-## geodesic distance 
-geo.dist = path.dist.cal$geo.dist
-
 # get the interpolation tree 
-intpn.tree = find.intpn.tree(theta,t1,t2, path.dist.cal$path.mat,
-                             path.dist.cal$dist.seq,
-                             path.dist.cal$geo.dist,
-                             path.dist.cal$noncomm.edge.dist,
-                             path.dist.cal$comm.edge.dist,
-                             path.dist.cal$leaf.edge.dist)
+intpn.tree = find.intpn.tree(theta,t1,t2)
 
 ## test whether the interpolation tree is the correct one 
 ## we calculate the geodesic distance between t1 and intpn.tree
+
+## geodesic distance 
+geo.dist = get.path.geodist(t1,t2)$geo.dist
+
 part.dist.test = get.path.geodist(t1,intpn.tree)$geo.dist-theta*geo.dist 
 
 if(abs(part.dist.test)>1e-3){
