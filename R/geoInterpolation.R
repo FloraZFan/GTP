@@ -2,12 +2,6 @@
 ## find the interpolation tree on geodesic
 ## @ parameter theta: parameter for interpolation 
 ## @ paramter t1/t2: starting/ending tree list
-## @ paramter path.mat: matrix of path space that geodesic travels
-## @ paramter noncomm.dist.seq: matrix of distance that noncommon edges contribute in each othant
-## @ paramter geo.dist: geodesic distance from t1 to t2 
-## @ paramter noncomm.dist: noncommon edge contibution to geodesic distance
-## @ paramter comm.dist: common edge contribution to geodesic distance
-## @ paramter leaf.dist: leaf edge contribution to geodesic distance
 ## @ return intpn.tree is a tree list which contains:
 ## feature tip.label: leaf edge label 
 ## feature tip.length: leaf edge length 
