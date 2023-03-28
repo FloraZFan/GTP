@@ -18,6 +18,6 @@ The algorithm calculates the geodesic path in tree space and then further calcul
 This part aims to interpret the intermediate trees in between the staring tree and ending tree. Given any $\theta\in [0,1]$, the algorithm returns the intermediate tree.  
 
 
-## Rederences
+## References
 [1] Billera, L. J., Holmes, S. P., & Vogtmann, K. (2001). Geometry of the space of phylogenetic trees. Advances in Applied Mathematics, 27(4), 733-767.
 [2] Owen, M., & Provan, J. S. (2010). A fast algorithm for computing geodesic distances in tree space. IEEE/ACM Transactions on Computational Biology and Bioinformatics, 8(1), 2-13.
